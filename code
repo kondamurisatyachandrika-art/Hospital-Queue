@@ -1,0 +1,161 @@
+#include <iostream>
+#include <queue>
+#include <string>
+
+using namespace std;
+
+class Patient {
+public:
+    string name;
+    int age;
+    int priority;
+
+    Patient(string n, int a, int p) {
+        name = n;
+        age = a;
+        priority = p;
+    }
+};
+
+class Compare {
+public:
+    bool operator()(Patient a, Patient b) {
+        return a.priority > b.priority;
+    }
+};
+
+class HospitalQueueSystem {
+private:
+    priority_queue<Patient, vector<Patient>, Compare> patientQueue;
+
+public:
+
+    void addPatient() {
+        string name;
+        int age;
+        int priority;
+
+        cout << "\nEnter Patient Name: ";
+        cin.ignore();
+        getline(cin, name);
+
+        cout << "Enter Age: ";
+        cin >> age;
+
+        cout << "Enter Priority Level:\n";
+        cout << "1 -> Emergency\n";
+        cout << "2 -> Serious\n";
+        cout << "3 -> Normal\n";
+        cout << "Enter Priority: ";
+        cin >> priority;
+
+        patientQueue.push(Patient(name, age, priority));
+
+        cout << "Patient Added Successfully!\n";
+    }
+
+    void servePatient() {
+
+        if(patientQueue.empty()) {
+            cout << "No Patients in Queue!\n";
+            return;
+        }
+
+        Patient p = patientQueue.top();
+        patientQueue.pop();
+
+        cout << "\nServing Patient...\n";
+        cout << "Name: " << p.name << endl;
+        cout << "Age: " << p.age << endl;
+
+        if(p.priority == 1)
+            cout << "Priority: Emergency\n";
+
+        else if(p.priority == 2)
+            cout << "Priority: Serious\n";
+
+        else
+            cout << "Priority: Normal\n";
+    }
+
+    void displayPatients() {
+
+        if(patientQueue.empty()) {
+            cout << "No Patients in Queue!\n";
+            return;
+        }
+
+        priority_queue<Patient, vector<Patient>, Compare> tempQueue = patientQueue;
+
+        cout << "\n===== PATIENT QUEUE =====\n";
+
+        while(!tempQueue.empty()) {
+
+            Patient p = tempQueue.top();
+            tempQueue.pop();
+
+            cout << "Name: " << p.name
+                 << " | Age: " << p.age
+                 << " | Priority: ";
+
+            if(p.priority == 1)
+                cout << "Emergency";
+
+            else if(p.priority == 2)
+                cout << "Serious";
+
+            else
+                cout << "Normal";
+
+            cout << endl;
+        }
+    }
+
+    void menu() {
+
+        int choice;
+
+        do {
+            cout << "\n===== HOSPITAL MANAGEMENT QUEUE SYSTEM =====\n";
+            cout << "1. Add Patient\n";
+            cout << "2. Serve Patient\n";
+            cout << "3. Display Patients\n";
+            cout << "4. Exit\n";
+
+            cout << "Enter Your Choice: ";
+            cin >> choice;
+
+            switch(choice) {
+
+                case 1:
+                    addPatient();
+                    break;
+
+                case 2:
+                    servePatient();
+                    break;
+
+                case 3:
+                    displayPatients();
+                    break;
+
+                case 4:
+                    cout << "Exiting System...\n";
+                    break;
+
+                default:
+                    cout << "Invalid Choice!\n";
+            }
+
+        } while(choice != 4);
+    }
+};
+
+int main() {
+
+    HospitalQueueSystem system;
+
+    system.menu();
+
+    return 0;
+}
